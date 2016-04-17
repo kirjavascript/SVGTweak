@@ -25,6 +25,8 @@ import { attrList, attrDefaults, presetLookup} from './data';
 // move up down
 // shapes / filters / etc
 
+// innerHTML
+
 // init
 
 i3();
@@ -92,7 +94,7 @@ function setAttr(type, data, value, refresh) {
 
     if (type == 'preset') {
         attr[attrIndex].name = value;
-        attr[attrIndex].value = presetLookup(value)
+        attr[attrIndex].value = presetLookup(value, data.parent.shape)
     }
     else {
         attr[attrIndex][type] = value;
@@ -141,6 +143,7 @@ function update() {
         .append('div')
         .classed('element', 1)
         .html(d => d.shape)
+        .on('click', d => window.open('http://mdn.io/' + d.shape))
 
     shapeEnter
         .selectAll('button')
@@ -156,8 +159,6 @@ function update() {
         .classed('option', 1)
         .html(d => d.action)
         .on('click', function(d) {option(this, d.index, d.action)})
-
-
 
     // merge
 

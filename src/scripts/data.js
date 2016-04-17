@@ -7,35 +7,49 @@ let color = (function() {
 })()
 
 export let attrs = {
+
     rect: 'x y width height fill',
     circle: 'cx cy r fill',
     line: 'x1 x2 y1 y2 stroke stroke-width',
+    text: 'x y font-family font-size',
+    path: 'd fill',
+    ellipse: 'cx cy rx ry fill',
+    polygon: 'points fill',
+    polyline: 'points stroke fill',
+
     post: 'transform',
     pre: 'name id class'
+
+}; Object.keys(attrs).forEach(d => {attrs[d] = attrs[d].split(" ")});
+
+let presets = {
+    x:0,
+    y:0, 
+    width: 100,
+    height: 100,
+    cx: 50,
+    cy: 50,
+    r: 50,
+    x1: 0,
+    x2: 100,
+    y1: 100,
+    y2: 0,
+    rx: 50,
+    ry: 25,
+    d: 'M50,0 L100,100 L0,100',
+    points: '60,20 100,40 100,80 60,100 20,80 20,40',
+    'font-family': 'sans-serif',
+    'font-size': 18,
+    'stroke-width': 2,
+    transform:'translate(0 0)'
 }
 
-// expand arrays
+export function presetLookup(d, shape) {
 
-Object.keys(attrs).forEach(d => {attrs[d] = attrs[d].split(" ")})
-
-export function presetLookup(d) {
-    let presets = {
-        x:0,
-        y:0, 
-        width: 100,
-        height: 100,
-        cx: 50,
-        cy: 50,
-        r: 50,
-        x1: 0,
-        x2: 100,
-        y1: 100,
-        y2: 0,
-        'stroke-width': 2,
-        transform:'translate(0 0)'
+    if (shape == 'polyline' && d == 'fill') {
+        return 'none';
     }
-
-    if (d == 'fill' || d == 'stroke') {
+    else if (d == 'fill' || d == 'stroke') {
         return color()
     }
     else {
@@ -48,7 +62,7 @@ export function attrDefaults(shape) {
     if(attrs[shape]) {
         return attrs[shape].map(d => ({
             name: d,
-            value: presetLookup(d)
+            value: presetLookup(d, shape)
         }))
     }
 

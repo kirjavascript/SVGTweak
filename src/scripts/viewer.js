@@ -57,7 +57,9 @@ function setAttrs(d) {
 
     // remove
 
-    let remove = [...this.attributes].filter(d => d.name != 'data-tweaker' && attrs[d.name] === undefined).map(d => d.name);
+    let remove = [...this.attributes]
+        .filter(d => d.name != 'data-tweaker' && attrs[d.name] === undefined)
+        .map(d => d.name);
 
     remove.forEach(d => this.removeAttribute(d))
 
