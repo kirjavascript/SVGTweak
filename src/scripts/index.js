@@ -3,13 +3,18 @@ import i3 from './i3';
 import edit from './editor';
 import generate from './generator';
 import draw, { initView } from './viewer';
-import { attrs, attrDefaults} from './data';
+import { attrList, attrDefaults, presetLookup} from './data';
+
+// menu
+// native colour picker
+// d3out
+
 // XML parser
 // https://www.npmjs.com/package/xml-parser
-
-// add dragging in ui
-// click to select element?
-// native colourpicker
+// load from file inputbox placeholder (paste svg)
+// http://bl.ocks.org/mbostock/3892928
+// http://bl.ocks.org/mccannf/1629464
+// drag + resize stuff
 
 // made defaults dropdown auto input?
 
@@ -41,12 +46,10 @@ d3.select('#shape').on('change', addShape)
 function addShape() {
     let shape = d3.select('#shape').node();
 
-    let defaults = attrDefaults[shape.value];
-
     svg.push({
         index: index++,
         shape: shape.value,
-        attr: defaults ? defaults.map(d => ({name:d[0], value:d[1]})) : []
+        attr: attrDefaults(shape.value)
     });
 
     shape.selectedIndex = 0;
@@ -77,12 +80,19 @@ function option(element, index, action) {
 
 function setAttr(type, data, value, refresh) {
 
+    // find data
+
     let attr = svg.find(d => data.parent.index == d.index).attr;
 
     let attrIndex = attr.findIndex(d => data == d);
 
-    if (typeof value == 'object') {
-        attr[attrIndex][type] = value.value;
+    // set data
+
+    (typeof value == 'object') && (value = value.value)
+
+    if (type == 'preset') {
+        attr[attrIndex].name = value;
+        attr[attrIndex].value = presetLookup(value)
     }
     else {
         attr[attrIndex][type] = value;
@@ -184,9 +194,9 @@ function update() {
                 d3.select(this)
                     .append('select')
                     .attr('class', 'option')
-                    .on('change', function(d) { setAttr("name", d, this, true)})
+                    .on('change', function(d) { setAttr("preset", d, this, true)})
                     .selectAll('option')
-                    .data(['Name', 'id', 'class'].concat(attrs[d.parent.shape], attrs.all))
+                    .data(attrList(d.parent.shape))
                     .enter()
                     .append('option')
                     .html(d => d)

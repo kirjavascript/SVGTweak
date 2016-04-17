@@ -29,10 +29,6 @@ export function initView() {
 
 export default function(data) {
 
-    //http://bl.ocks.org/mbostock/3892928
-
-    // drag + resize stuff
-
     let draw = viewer.selectAll('[data-tweaker]')
         .data(data, d => d.index)
 
@@ -46,7 +42,6 @@ export default function(data) {
     let drawMerge = drawEnter.merge(draw);
 
     drawMerge.attrs(setAttrs)
-
 
 }
 
@@ -70,8 +65,4 @@ function setAttrs(d) {
 
 }
 
-// view
-// data
-// menu
-// d3out
-// native colour picker
+
