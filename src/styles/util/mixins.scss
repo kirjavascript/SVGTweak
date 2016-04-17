@@ -1,0 +1,28 @@
+// media queries
+@mixin device-large {
+    @media only screen and (min-width : 1200px) { @content; }
+}
+
+
+// vertical align
+@mixin vert ($pct:50%) {
+    top: $pct;
+    transform: translateY(-50%);
+}
+
+// horizontal align 
+@mixin horiz ($pct:50%) {
+    left: $pct;
+    transform: translateX(-50%);
+}
+
+
+@mixin fill {
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}   

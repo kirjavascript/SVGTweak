@@ -1,0 +1,18 @@
+#viewer {
+    @include fill;
+}
+
+.axis {
+    font-size: 12px;
+}
+
+.axis path {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1px;
+}
+
+.axis line {
+    shape-rendering: crispEdges;
+    stroke: #000;
+}

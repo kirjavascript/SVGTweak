@@ -1,0 +1,16 @@
+.window {
+
+    height: 100%;
+    width: 100%;
+
+    > .panelH {
+        float: left;
+        height: 100%;
+        position: relative;
+    }
+}
+
+.panel > .panelH {
+    float: left;
+    position: relative;
+}
