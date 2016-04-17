@@ -29,11 +29,49 @@ export function initView() {
 
 export default function(data) {
 
-    viewer.selectAll('')
+    //http://bl.ocks.org/mbostock/3892928
 
-    // drag
-    // resize
-    // zoom
+    // drag + resize stuff
+
+    let draw = viewer.selectAll('[data-tweaker]')
+        .data(data, d => d.index)
+
+    draw.exit().remove();
+
+    let drawEnter = draw
+        .enter()
+        .append(d => document.createElementNS(d3.namespaces.svg, d.shape))
+        .attr('data-tweaker', true)
+
+    let drawMerge = drawEnter.merge(draw);
+
+    drawMerge.attrs(setAttrs)
 
 
 }
+
+function setAttrs(d) {
+
+    let attrs = {};
+
+    // add/edit
+
+    d.attr.forEach(d => {
+        d.name && (attrs[d.name] = d.value)
+    });
+
+    // remove
+
+    let remove = [...this.attributes].filter(d => d.name != 'data-tweaker' && attrs[d.name] === undefined).map(d => d.name);
+
+    remove.forEach(d => this.removeAttribute(d))
+
+    return attrs;
+
+}
+
+// view
+// data
+// menu
+// d3out
+// native colour picker

@@ -3,6 +3,7 @@ import i3 from './i3';
 import edit from './editor';
 import generate from './generator';
 import draw, { initView } from './viewer';
+import { attrs, attrDefaults} from './data';
 // XML parser
 // https://www.npmjs.com/package/xml-parser
 
@@ -10,6 +11,9 @@ import draw, { initView } from './viewer';
 // click to select element?
 // native colourpicker
 
+// made defaults dropdown auto input?
+
+// use i3 for showing d3 window?
 // round paths to int
 // dupe
 // svg .children
@@ -27,19 +31,6 @@ initView();
 let index = 0;
 let svg = [];
 
-// data
-
-let attrs = {
-    rect: ['x','y','width','height','fill','rx','ry'],
-    circle: ['cx','cy','r','fill'],
-    all: ['transform']
-};
-
-let attrDefaults = {
-    rect: [['x', 0],['y', 0],['width', 100],['height', 100],['fill', '#F00']],
-    circle: [['cx', 0],['cy', 50],['r', 50],['fill', '#00F']]
-}
-
 // events
 
 //d3.select('#add').on('click', addShape);
@@ -50,12 +41,13 @@ d3.select('#shape').on('change', addShape)
 function addShape() {
     let shape = d3.select('#shape').node();
 
+    let defaults = attrDefaults[shape.value];
+
     svg.push({
         index: index++,
         shape: shape.value,
-        attr: attrDefaults[shape.value].map(d => ({name:d[0], value:d[1]}))
-        // fix deletteion issue
-    })
+        attr: defaults ? defaults.map(d => ({name:d[0], value:d[1]})) : []
+    });
 
     shape.selectedIndex = 0;
 
@@ -120,7 +112,7 @@ function removeAttr(data) {
 
 function update() {
 
-    let shape = d3.select('#data')
+    let shape = d3.select('#menu')
         .selectAll('div')
         .data(svg, d => d.index)
 
