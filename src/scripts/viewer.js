@@ -74,10 +74,14 @@ function setAttrs(d) {
 function drag(d) {
     let self = d3.select(this);
     
-    let mouse, bbox;
+    let mouse, bbox, attrs;
 
     self.on('mousedown', function() {
-        d3.select(document.body).on('mousemove', drag)
+        d3.select(document.body)
+            .on('mousemove', drag)
+
+
+
         mouse = {
             x: d3.event.clientX,
             y: d3.event.clientY,
