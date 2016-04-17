@@ -6,8 +6,10 @@ import { generateCode, parseXML } from './io';
 import draw, { initView } from './viewer';
 import { attrList, attrDefaults, presetLookup} from './data';
 
-// menu
+// TODO
+
 // d3out
+// menu
 // XML parser XMLSerializer / https://developer.mozilla.org/en-US/docs/Web/API/DOMParser // load from file inputbox placeholder (paste svg)
 // innerHTML
 
@@ -41,8 +43,9 @@ let svg = [];
 // events
 
 d3.select('#shape').on('change', addShape)
-d3.select('#loadXML').on('click', loadXML)
-d3.select('#loadXMLInput').on('paste', loadXML)
+d3.select('#mode').on('change', update)
+//d3.select('#loadXML').on('click', loadXML)
+//d3.select('#loadXMLInput').on('paste', loadXML)
 
 // ui
 
@@ -60,19 +63,19 @@ function addShape() {
     update();
 }
 
-function loadXML() {
-    
-    if (d3.event.type == 'paste') {
-        console.log(parseXML(this.value))
-        this.value = "";
-    }
-    
-    d3.select('#loadXMLInput')
-        .style('display', d3.event.type == 'paste' ? 'none' : 'block')
-    d3.select('#loadXML')
-        .style('display', d3.event.type != 'paste' ? 'none' : 'block')
+// function loadXML() {
 
-}
+//     if (d3.event.type == 'paste') {
+//         console.log(parseXML(this.value))
+//         this.value = "";
+//     }
+    
+//     d3.select('#loadXMLInput')
+//         .style('display', d3.event.type == 'paste' ? 'none' : 'block')
+//     d3.select('#loadXML')
+//         .style('display', d3.event.type != 'paste' ? 'none' : 'block')
+
+// }
 
 function option(element, index, action) {
 
@@ -236,7 +239,7 @@ function update() {
 
 function updateData(data) {
     draw(data);
-    generateCode(data);
+    generateCode(data, d3.select('#mode').node().value);
 }
 
 function customAttrInput(d, i, a) {

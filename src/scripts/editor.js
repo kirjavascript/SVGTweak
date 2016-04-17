@@ -1,5 +1,6 @@
+var editor = ace.edit("editor");
+
 export default function() {
-    var editor = ace.edit("editor");
         editor.getSession().setUseWorker(false);
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/html");
@@ -12,6 +13,7 @@ export function read() {
     return ace.edit("editor").getValue();
 }
 
-export function write(str) {
-    ace.edit("editor").setValue(str);
+export function write(str, mode='html') {
+    editor.getSession().setMode("ace/mode/"+mode)
+    editor.setValue(str);
 }

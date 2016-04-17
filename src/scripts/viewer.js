@@ -68,5 +68,3 @@ function setAttrs(d) {
     return attrs;
 
 }
-
-

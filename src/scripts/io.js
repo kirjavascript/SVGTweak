@@ -21,7 +21,26 @@ export function generateCode (data, mode='xml') {
 
         out += `</svg>`;
 
-        write(out);
+        write(out, 'html');
+
+    }
+    else if (mode == 'd3') {
+
+        let out = ``;
+
+        data.forEach(d => {
+
+            out += `d3.select(this)\n`;
+            out += `\t.append('${d.shape}')\n`;
+
+            d.attr.filter(a => a.name).forEach(d => {
+                out += `\t.attr('${d.name}', '${d.value}')\n`;
+            })
+
+            out += '\n';
+        })
+
+        write(out, 'javascript');
 
     }
 
@@ -30,8 +49,6 @@ export function generateCode (data, mode='xml') {
 let parser = new DOMParser();
 
 export function parseXML(data) {
-
-    console.log(data);
 
     return parser.parseFromString(data, "application/xml")
 
