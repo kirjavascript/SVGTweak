@@ -1,17 +1,17 @@
 import * as d3 from './d3';
 import i3 from './i3';
 import edit from './editor';
-import generate from './generator';
+import parser from './parser';
+import { generateCode, parseXML } from './io';
 import draw, { initView } from './viewer';
 import { attrList, attrDefaults, presetLookup} from './data';
 
-// native colour picker
 // menu
 // d3out
+// XML parser XMLSerializer / https://developer.mozilla.org/en-US/docs/Web/API/DOMParser // load from file inputbox placeholder (paste svg)
+// innerHTML
 
-// XML parser
 // https://www.npmjs.com/package/xml-parser
-// load from file inputbox placeholder (paste svg)
 // http://bl.ocks.org/mbostock/3892928
 // http://bl.ocks.org/mccannf/1629464
 // drag + resize stuff
@@ -25,7 +25,7 @@ import { attrList, attrDefaults, presetLookup} from './data';
 // move up down
 // shapes / filters / etc
 
-// innerHTML
+
 
 // init
 
@@ -40,8 +40,9 @@ let svg = [];
 
 // events
 
-//d3.select('#add').on('click', addShape);
 d3.select('#shape').on('change', addShape)
+d3.select('#loadXML').on('click', loadXML)
+d3.select('#loadXMLInput').on('paste', loadXML)
 
 // ui
 
@@ -59,6 +60,20 @@ function addShape() {
     update();
 }
 
+function loadXML() {
+    
+    if (d3.event.type == 'paste') {
+        console.log(parseXML(this.value))
+        this.value = "";
+    }
+    
+    d3.select('#loadXMLInput')
+        .style('display', d3.event.type == 'paste' ? 'none' : 'block')
+    d3.select('#loadXML')
+        .style('display', d3.event.type != 'paste' ? 'none' : 'block')
+
+}
+
 function option(element, index, action) {
 
     if (action == 'remove') {
@@ -73,8 +88,12 @@ function option(element, index, action) {
         element.attr.push({value:""});
 
     }
-    else if (action == 'up') {
+    else if (action == 'down') {
         // swap index and DOM
+        let elementIndex = svg.findIndex(d => d.index == index);
+
+        console.log(elementIndex)
+
     }
 
     update();
@@ -217,7 +236,7 @@ function update() {
 
 function updateData(data) {
     draw(data);
-    generate(data);
+    generateCode(data);
 }
 
 function customAttrInput(d, i, a) {

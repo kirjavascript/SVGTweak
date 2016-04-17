@@ -25,6 +25,8 @@ export function initView() {
         .append("g")
         .attr("class", "axis yAxis")
         .call(yAxis);
+
+    viewer = viewer.append('g').attr('id', 'graphics')
 }
 
 export default function(data) {

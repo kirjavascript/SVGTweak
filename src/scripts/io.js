@@ -1,6 +1,6 @@
 import { read, write } from './editor';
 
-export default function (data, mode='xml') {
+export function generateCode (data, mode='xml') {
 
     if (mode == 'xml') {
 
@@ -24,5 +24,15 @@ export default function (data, mode='xml') {
         write(out);
 
     }
+
+}
+
+let parser = new DOMParser();
+
+export function parseXML(data) {
+
+    console.log(data);
+
+    return parser.parseFromString(data, "application/xml")
 
 }
