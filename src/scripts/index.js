@@ -5,8 +5,8 @@ import generate from './generator';
 import draw, { initView } from './viewer';
 import { attrList, attrDefaults, presetLookup} from './data';
 
-// menu
 // native colour picker
+// menu
 // d3out
 
 // XML parser
@@ -189,6 +189,7 @@ function update() {
             .on('keydown', function(d) { setAttr("value", d, this, false)})
             .on('keyup', function(d) { setAttr("value", d, this, false)})
             .on('change', function(d) { setAttr("value", d, this, false)})
+            .on('click', customAttrInput)
 
         attrEnter
             .each(function(d) {
@@ -217,4 +218,19 @@ function update() {
 function updateData(data) {
     draw(data);
     generate(data);
+}
+
+function customAttrInput(d, i, a) {
+
+    if (d.name == 'fill' || d.name == 'stroke') {
+
+        let self = this;
+
+        d3.select('.colorPicker')
+            .on('change', function() {
+                self.value = d.value = this.value;
+                update();
+            })
+            .node().click()
+    }
 }
