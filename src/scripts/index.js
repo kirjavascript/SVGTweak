@@ -8,7 +8,6 @@ import { attrList, attrDefaults, presetLookup} from './data';
 
 // TODO
 
-// d3out
 // menu
 // XML parser XMLSerializer / https://developer.mozilla.org/en-US/docs/Web/API/DOMParser // load from file inputbox placeholder (paste svg)
 // innerHTML
@@ -144,7 +143,7 @@ function removeAttr(data) {
 
 }
 
-function update() {
+export function update() {
 
     let shape = d3.select('#menu')
         .selectAll('div')

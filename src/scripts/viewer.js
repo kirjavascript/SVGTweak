@@ -1,4 +1,5 @@
 import * as d3 from './d3';
+import { update } from './index';
 
 var viewer;
 var padding = 35;
@@ -40,6 +41,7 @@ export default function(data) {
         .enter()
         .append(d => document.createElementNS(d3.namespaces.svg, d.shape))
         .attr('data-tweaker', true)
+        .each(drag)
 
     let drawMerge = drawEnter.merge(draw);
 
@@ -67,4 +69,49 @@ function setAttrs(d) {
 
     return attrs;
 
+}
+
+function drag(d) {
+    let self = d3.select(this);
+    
+    let mouse, bbox;
+
+    self.on('mousedown', function() {
+        d3.select(document.body).on('mousemove', drag)
+        mouse = {
+            x: d3.event.clientX,
+            y: d3.event.clientY,
+        }
+        bbox = self.node().getBBox();
+
+        d3.event.preventDefault()
+
+    })
+    //.on('mouseout', dragend)
+    .on('mouseup', dragend)
+
+    function drag() {
+
+        let delta = {
+            x: d3.event.clientX - mouse.x,
+            y: d3.event.clientY - mouse.y,
+        }
+        
+        self
+            .attr('x', bbox.x += delta.x)
+            .attr('y', bbox.y += delta.y)
+
+        d.attr.find(d => d.name == 'x').value = bbox.x;
+        d.attr.find(d => d.name == 'y').value = bbox.y;
+
+        mouse = {
+            x: d3.event.clientX,
+            y: d3.event.clientY,
+        }
+    }
+
+    function dragend() {
+        d3.select(document.body).on('mousemove', null)
+        update();
+    }
 }
