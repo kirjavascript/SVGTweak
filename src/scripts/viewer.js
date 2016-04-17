@@ -80,18 +80,19 @@ function drag(d) {
         d3.select(document.body)
             .on('mousemove', drag)
 
-        if (this.attributes.x || this.attributes.y) {
-            attrs = { x: 'x', y: 'y'};
-        }
-        else if (this.attributes.cx || this.attributes.cy) {
-            attrs = { x: 'cx', y: 'cy'};
-        }
-
         mouse = {
             x: d3.event.clientX,
             y: d3.event.clientY,
         }
+
         bbox = self.node().getBBox();
+
+        if (this.attributes.x || this.attributes.y) {
+            attrs = { x: 'x', y: 'y'};
+        }
+        else if (this.attributes.cx || this.attributes.cy) {
+            attrs = { x: 'cx', y: 'cy', circle: 1};
+        }        
 
         d3.event.preventDefault()
 
@@ -106,13 +107,30 @@ function drag(d) {
                 x: d3.event.clientX - mouse.x,
                 y: d3.event.clientY - mouse.y,
             }
+
+
+
+            bbox.x += delta.x;
+            bbox.y += delta.y;
             
             self
-                .attr(attrs.x, bbox.x += delta.x)
-                .attr(attrs.y, bbox.y += delta.y)
+                .attr(attrs.x, bbox.x)
+                .attr(attrs.y, bbox.y)
 
             d.attr.find(d => d.name == attrs.x).value = bbox.x;
             d.attr.find(d => d.name == attrs.y).value = bbox.y;
+
+            if(attrs.circle) {
+
+                self
+                    .attr(attrs.x, bbox.x + bbox.width/2)
+                    .attr(attrs.y, bbox.y + bbox.height/2)
+
+                d.attr.find(d => d.name == attrs.x).value = bbox.x + bbox.width/2;
+                d.attr.find(d => d.name == attrs.y).value = bbox.y + bbox.height/2;
+            }
+
+
 
             mouse = {
                 x: d3.event.clientX,
