@@ -80,7 +80,12 @@ function drag(d) {
         d3.select(document.body)
             .on('mousemove', drag)
 
-
+        if (this.attributes.x || this.attributes.y) {
+            attrs = { x: 'x', y: 'y'};
+        }
+        else if (this.attributes.cx || this.attributes.cy) {
+            attrs = { x: 'cx', y: 'cy'};
+        }
 
         mouse = {
             x: d3.event.clientX,
@@ -96,26 +101,30 @@ function drag(d) {
 
     function drag() {
 
-        let delta = {
-            x: d3.event.clientX - mouse.x,
-            y: d3.event.clientY - mouse.y,
-        }
-        
-        self
-            .attr('x', bbox.x += delta.x)
-            .attr('y', bbox.y += delta.y)
+        if (attrs) {
+            let delta = {
+                x: d3.event.clientX - mouse.x,
+                y: d3.event.clientY - mouse.y,
+            }
+            
+            self
+                .attr(attrs.x, bbox.x += delta.x)
+                .attr(attrs.y, bbox.y += delta.y)
 
-        d.attr.find(d => d.name == 'x').value = bbox.x;
-        d.attr.find(d => d.name == 'y').value = bbox.y;
+            d.attr.find(d => d.name == attrs.x).value = bbox.x;
+            d.attr.find(d => d.name == attrs.y).value = bbox.y;
 
-        mouse = {
-            x: d3.event.clientX,
-            y: d3.event.clientY,
+            mouse = {
+                x: d3.event.clientX,
+                y: d3.event.clientY,
+            }
         }
+
     }
 
     function dragend() {
         d3.select(document.body).on('mousemove', null)
+        attrs = null;
         update();
     }
 }
