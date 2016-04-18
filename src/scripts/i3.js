@@ -1,6 +1,6 @@
 import * as d3 from './d3';
 
-export default function() {
+export function i3() {
     d3.selectAll('.window, .panel')
         .each(function() {
             let node = d3.select(this).node();
@@ -14,3 +14,5 @@ export default function() {
                 .style('height', (d,i,a) => `${100/a.filter(d=>d).length}%`)
         })
 }
+
+i3();

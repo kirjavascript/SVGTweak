@@ -1,10 +1,12 @@
 import * as d3 from './d3';
 
-export default Object.create({
+export default Object.freeze({
+
     list,
     defaults,
     preset,
     customInput
+
 })
 
 let color = (function() {
@@ -27,7 +29,11 @@ let shapeAttrs = {
     post: 'transform',
     pre: 'name id class'
 
-}; Object.keys(shapeAttrs).forEach(d => {shapeAttrs[d] = shapeAttrs[d].split(" ")});
+}; 
+
+Object
+    .keys(shapeAttrs)
+    .forEach(d => {shapeAttrs[d] = shapeAttrs[d].split(" ")});
 
 let presets = {
     x:0,
@@ -91,11 +97,14 @@ function customInput(d, i, a) {
 
         let self = this;
 
+        // ew;
+
         d3.select('.colorPicker')
             .on('change', function() {
                 self.value = d.value = this.value;
                 update();
             })
-            .node().click()
+            .node()
+            .click()
     }
 }

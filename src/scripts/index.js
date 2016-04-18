@@ -1,71 +1,44 @@
-import i3 from './i3';
+import './i3';
+import './editor';
 import * as d3 from './d3';
 import attr from './attr';
-import edit from './editor';
-import parser from './parser';
-import draw, { initView } from './viewer';
-import { generateCode, parseXML } from './io';
+import draw from './viewer';
+import { generateCode } from './parser';
 
-// TODO
-
-// menu
-// XML parser XMLSerializer / https://developer.mozilla.org/en-US/docs/Web/API/DOMParser // load from file inputbox placeholder (paste svg)
-// innerHTML
-
-// https://www.npmjs.com/package/xml-parser
-// http://bl.ocks.org/mbostock/3892928
-// http://bl.ocks.org/mccannf/1629464
-// drag + resize stuff
-
-// made defaults dropdown auto input?
-
-// use i3 for showing d3 window?
-// round paths to int
-// dupe
-// svg .children
-// move up down
-// shapes / filters / etc
-
-
-
-// init
-
-i3();
-edit();
-initView();
-
-// conf
-
-let index = 0;
 let svg = [];
 
-// events
+// events / ui
 
-d3.select('#shape').on('change', addShape)
-d3.select('#mode').on('change', update)
-
-// ui
-
-function addShape() {
+d3.select('#shape').on('change', function() {
     let shape = d3.select('#shape').node();
 
-    svg.push({
-        index: index++,
-        shape: shape.value,
-        attr: attr.defaults(shape.value)
-    });
+    addShape(shape.value);
 
     shape.selectedIndex = 0;
 
     update();
-}
+})
+d3.select('#mode').on('change', update)
+
+// ui
+
+let addShape = (function() {
+
+    let index = 0;
+    return (shape) => svg.push({
+        index: index++,
+        shape: shape,
+        attr: attr.defaults(shape)
+    });
+
+})()
 
 function option(element, index, action) {
 
     if (action == 'remove') {
 
         svg = svg.filter(d => d.index != index)
- 
+
     }
     else if (action == 'attr') {
 
@@ -89,20 +62,20 @@ function setAttr(type, data, value, refresh) {
 
     // find data
 
-    let attr = svg.find(d => data.parent.index == d.index).attr;
+    let objAttr = svg.find(d => data.parent.index == d.index).attr;
 
-    let attrIndex = attr.findIndex(d => data == d);
+    let objAttrIndex = objAttr.findIndex(d => data == d);
 
     // set data
 
     (typeof value == 'object') && (value = value.value)
 
     if (type == 'preset') {
-        attr[attrIndex].name = value;
-        attr[attrIndex].value = attr.preset(value, data.parent.shape)
+        objAttr[objAttrIndex].name = value;
+        objAttr[objAttrIndex].value = attr.preset(value, data.parent.shape)
     }
     else {
-        attr[attrIndex][type] = value;
+        objAttr[objAttrIndex][type] = value;
     }
 
     if (refresh) {
@@ -221,8 +194,6 @@ export function update() {
 }
 
 function updateData(data) {
-    console.log(data);
     draw(data);
     generateCode(data, d3.select('#mode').node().value);
 }
-

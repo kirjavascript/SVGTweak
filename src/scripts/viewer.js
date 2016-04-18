@@ -1,34 +1,30 @@
 import * as d3 from './d3';
 import { update } from './index';
 
-var viewer;
 var padding = 35;
 
-export function initView() {
+var viewer = d3.select('#viewer')
+    .append('g')
+    .attr("transform", `translate(${padding} ${padding})`);
 
-    viewer = d3.select('#viewer')
-        .append('g')
-        .attr("transform", `translate(${padding} ${padding})`);
+var scale = d3.scaleLinear()
+        .range([0, 1000])
+        .domain([0, 1000])
 
-    var scale = d3.scaleLinear()
-            .range([0, 1000])
-            .domain([0, 1000])
+let xAxis = d3.axisTop(scale).ticks(20);
+let yAxis = d3.axisLeft(scale).ticks(20);
 
-    let xAxis = d3.axisTop(scale).ticks(20);
-    let yAxis = d3.axisLeft(scale).ticks(20);
+viewer
+    .append("g")
+    .attr("class", "axis xAxis")
+    .call(xAxis);
 
-    viewer
-        .append("g")
-        .attr("class", "axis xAxis")
-        .call(xAxis);
+viewer
+    .append("g")
+    .attr("class", "axis yAxis")
+    .call(yAxis);
 
-    viewer
-        .append("g")
-        .attr("class", "axis yAxis")
-        .call(yAxis);
-
-    viewer = viewer.append('g').attr('id', 'graphics')
-}
+viewer = viewer.append('g').attr('id', 'graphics')
 
 export default function(data) {
 
@@ -76,9 +72,12 @@ function drag(d) {
     
     let mouse, bbox, attrs;
 
-    self.on('mousedown', function() {
+    self.on('mousedown', dragStart)
+        .on('mouseup', dragEnd)
+
+    function dragStart() {
         d3.select(document.body)
-            .on('mousemove', drag)
+            .on('mousemove', dragMove)
 
         mouse = {
             x: d3.event.clientX,
@@ -87,20 +86,17 @@ function drag(d) {
 
         bbox = self.node().getBBox();
 
-        if (this.attributes.x || this.attributes.y) {
+        if (this.attributes.x && this.attributes.y) {
             attrs = { x: 'x', y: 'y'};
         }
-        else if (this.attributes.cx || this.attributes.cy) {
+        else if (this.attributes.cx && this.attributes.cy) {
             attrs = { x: 'cx', y: 'cy', circle: 1};
         }        
 
         d3.event.preventDefault()
+    }
 
-    })
-    //.on('mouseout', dragend)
-    .on('mouseup', dragend)
-
-    function drag() {
+    function dragMove() {
 
         if (attrs) {
             let delta = {
@@ -140,7 +136,7 @@ function drag(d) {
 
     }
 
-    function dragend() {
+    function dragEnd() {
         d3.select(document.body).on('mousemove', null)
         attrs = null;
         update();
