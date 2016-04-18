@@ -11,6 +11,8 @@ will never have support for metadata
 TODO
 ----
 
+NESTING / HTML !!!
+
 grab info from docs
 
 swapping index should just change itemz

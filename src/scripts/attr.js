@@ -1,4 +1,5 @@
 import * as d3 from './d3';
+import { update } from './index';
 
 export default Object.freeze({
 

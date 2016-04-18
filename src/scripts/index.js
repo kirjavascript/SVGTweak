@@ -5,51 +5,71 @@ import attr from './attr';
 import draw from './viewer';
 import { generateCode } from './parser';
 
-let svg = [];
+// split this into module?
 
-// events / ui
+export let SVG = (function() {
+
+    let index = 0;
+
+    function SVG() {
+        return 'hello world';
+    }
+
+    SVG.data = [];
+
+    SVG.add = function(shape) {
+        index++;
+        this.data.push({
+            index: index++,
+            shape: shape,
+            attrs: attr.defaults(shape)
+        })
+        return this;
+    }
+
+    SVG.reset = function() {
+        index = 0;
+        this.data = [];
+        return this;
+    }
+
+    return SVG;
+
+})()
+
+// events
+
+d3.select('#mode').on('change', update)
 
 d3.select('#shape').on('change', function() {
     let shape = d3.select('#shape').node();
 
-    addShape(shape.value);
+    SVG.add(shape.value);
 
     shape.selectedIndex = 0;
 
     update();
 })
-d3.select('#mode').on('change', update)
 
-// ui
-
-let addShape = (function() {
-
-    let index = 0;
-    return (shape) => svg.push({
-        index: index++,
-        shape: shape,
-        attr: attr.defaults(shape)
-    });
-
-})()
+// data manipulation
 
 function option(element, index, action) {
 
     if (action == 'remove') {
 
-        svg = svg.filter(d => d.index != index)
+        SVG.data = SVG.data.filter(d => d.index != index)
 
     }
     else if (action == 'attr') {
 
-        let element = svg.find(d => d.index == index);
+        let element = SVG.data.find(d => d.index == index);
 
-        element.attr.push({value:""});
+        element.attrs.push({value:""});
 
     }
     else if (action == 'down') {
         // swap index and DOM
-        let elementIndex = svg.findIndex(d => d.index == index);
+        let elementIndex = SVG.data.findIndex(d => d.index == index);
 
         console.log(elementIndex)
 
@@ -62,7 +82,7 @@ function setAttr(type, data, value, refresh) {
 
     // find data
 
-    let objAttr = svg.find(d => data.parent.index == d.index).attr;
+    let objAttr = SVG.data.find(d => data.parent.index == d.index).attrs;
 
     let objAttrIndex = objAttr.findIndex(d => data == d);
 
@@ -82,15 +102,15 @@ function setAttr(type, data, value, refresh) {
         update();
     }
     else {
-        updateData(svg);
+        updateData(SVG.data);
     }
 }
 
 function removeAttr(data) {
 
-    svg.find(d => data.parent == d)
+    SVG.data.find(d => data.parent == d)
 
-    let attr = svg.find(d => data.parent == d).attr;
+    let attr = SVG.data.find(d => data.parent == d).attrs;
 
     let attrIndex = attr.findIndex(d => data == d);
 
@@ -100,11 +120,13 @@ function removeAttr(data) {
 
 }
 
+// data bind
+
 export function update() {
 
     let shape = d3.select('#menu')
         .selectAll('div')
-        .data(svg, d => d.index)
+        .data(SVG.data, d => d.index)
 
     // exit
 
@@ -121,7 +143,7 @@ export function update() {
         .append('div')
         .classed('element', 1)
         .html(d => d.shape)
-        .on('click', d => window.open('http://mdn.io/svg%20element%20' + d.shape))
+        .on('click', d => window.open('http://mdn.io/SVG.data%20element%20' + d.shape))
 
     shapeEnter
         .selectAll('button')
@@ -147,7 +169,7 @@ export function update() {
 
         let attrEnter = shapeMerge
             .selectAll('.attr')
-            .data(d => d.attr.map(j => {j.parent = d; return j}))
+            .data(d => d.attrs.map(j => {j.parent = d; return j}))
             .enter()
             .append('div')
             .classed('line', 1)
@@ -189,7 +211,7 @@ export function update() {
             .html('remove')
             .on('click', d => removeAttr(d))
 
-        updateData(svg);
+        updateData(SVG.data);
     }
 }
 

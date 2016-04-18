@@ -1,4 +1,5 @@
 import { read, write } from './editor';
+import htmlParse from 'html-parse-stringify';
 
 export function generateCode (data, mode='xml') {
 
@@ -8,7 +9,7 @@ export function generateCode (data, mode='xml') {
 
         data.forEach(d => {
 
-            let attr = d.attr
+            let attr = d.attrs
                 .filter(a => a.name)
                 .map(a => `${a.name}="${a.value}"`)
                 .join(" ");
@@ -33,7 +34,7 @@ export function generateCode (data, mode='xml') {
             out += `d3.select(this)\n`;
             out += `\t.append('${d.shape}')\n`;
 
-            d.attr.filter(a => a.name).forEach(d => {
+            d.attrs.filter(a => a.name).forEach(d => {
                 out += `\t.attr('${d.name}', '${d.value}')\n`;
             })
 
@@ -49,5 +50,21 @@ export function generateCode (data, mode='xml') {
 
 
 export function parse(data) {
+
+    // use object differ
+
+    let ast = htmlParse.parse(data);
+
+    if(ast.name.toLowerCase() == 'svg') {
+
+        ast.children.forEach(d => {
+
+        })
+
+    }
+
+    function getAttrs() {
+
+    }
 
 }

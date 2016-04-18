@@ -51,7 +51,7 @@ function setAttrs(d) {
 
     // add/edit
 
-    d.attr.forEach(d => {
+    d.attrs.forEach(d => {
         d.name && (attrs[d.name] = d.value)
     });
 
@@ -114,16 +114,16 @@ function drag(d) {
                     .attr(attrs.x, bbox.x + bbox.width/2)
                     .attr(attrs.y, bbox.y + bbox.height/2)
 
-                d.attr.find(d => d.name == attrs.x).value = bbox.x + bbox.width/2;
-                d.attr.find(d => d.name == attrs.y).value = bbox.y + bbox.height/2;
+                d.attrs.find(d => d.name == attrs.x).value = bbox.x + bbox.width/2;
+                d.attrs.find(d => d.name == attrs.y).value = bbox.y + bbox.height/2;
             }
             else {
                 self
                     .attr(attrs.x, bbox.x)
                     .attr(attrs.y, bbox.y)
 
-                d.attr.find(d => d.name == attrs.x).value = bbox.x;
-                d.attr.find(d => d.name == attrs.y).value = bbox.y;
+                d.attrs.find(d => d.name == attrs.x).value = bbox.x;
+                d.attrs.find(d => d.name == attrs.y).value = bbox.y;
             }
 
 
