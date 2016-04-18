@@ -1,10 +1,10 @@
-import * as d3 from './d3';
 import i3 from './i3';
+import * as d3 from './d3';
+import attr from './attr';
 import edit from './editor';
 import parser from './parser';
-import { generateCode, parseXML } from './io';
 import draw, { initView } from './viewer';
-import { attrList, attrDefaults, presetLookup} from './data';
+import { generateCode, parseXML } from './io';
 
 // TODO
 
@@ -43,8 +43,6 @@ let svg = [];
 
 d3.select('#shape').on('change', addShape)
 d3.select('#mode').on('change', update)
-//d3.select('#loadXML').on('click', loadXML)
-//d3.select('#loadXMLInput').on('paste', loadXML)
 
 // ui
 
@@ -54,27 +52,13 @@ function addShape() {
     svg.push({
         index: index++,
         shape: shape.value,
-        attr: attrDefaults(shape.value)
+        attr: attr.defaults(shape.value)
     });
 
     shape.selectedIndex = 0;
 
     update();
 }
-
-// function loadXML() {
-
-//     if (d3.event.type == 'paste') {
-//         console.log(parseXML(this.value))
-//         this.value = "";
-//     }
-    
-//     d3.select('#loadXMLInput')
-//         .style('display', d3.event.type == 'paste' ? 'none' : 'block')
-//     d3.select('#loadXML')
-//         .style('display', d3.event.type != 'paste' ? 'none' : 'block')
-
-// }
 
 function option(element, index, action) {
 
@@ -115,7 +99,7 @@ function setAttr(type, data, value, refresh) {
 
     if (type == 'preset') {
         attr[attrIndex].name = value;
-        attr[attrIndex].value = presetLookup(value, data.parent.shape)
+        attr[attrIndex].value = attr.preset(value, data.parent.shape)
     }
     else {
         attr[attrIndex][type] = value;
@@ -164,7 +148,7 @@ export function update() {
         .append('div')
         .classed('element', 1)
         .html(d => d.shape)
-        .on('click', d => window.open('http://mdn.io/' + d.shape))
+        .on('click', d => window.open('http://mdn.io/svg%20element%20' + d.shape))
 
     shapeEnter
         .selectAll('button')
@@ -210,7 +194,7 @@ export function update() {
             .on('keydown', function(d) { setAttr("value", d, this, false)})
             .on('keyup', function(d) { setAttr("value", d, this, false)})
             .on('change', function(d) { setAttr("value", d, this, false)})
-            .on('click', customAttrInput)
+            .on('click', attr.customInput)
 
         attrEnter
             .each(function(d) {
@@ -219,7 +203,7 @@ export function update() {
                     .attr('class', 'option')
                     .on('change', function(d) { setAttr("preset", d, this, true)})
                     .selectAll('option')
-                    .data(attrList(d.parent.shape))
+                    .data(attr.list(d.parent.shape))
                     .enter()
                     .append('option')
                     .html(d => d)
@@ -237,21 +221,8 @@ export function update() {
 }
 
 function updateData(data) {
+    console.log(data);
     draw(data);
     generateCode(data, d3.select('#mode').node().value);
 }
 
-function customAttrInput(d, i, a) {
-
-    if (d.name == 'fill' || d.name == 'stroke') {
-
-        let self = this;
-
-        d3.select('.colorPicker')
-            .on('change', function() {
-                self.value = d.value = this.value;
-                update();
-            })
-            .node().click()
-    }
-}

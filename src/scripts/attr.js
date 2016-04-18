@@ -1,12 +1,19 @@
 import * as d3 from './d3';
 
+export default Object.create({
+    list,
+    defaults,
+    preset,
+    customInput
+})
+
 let color = (function() {
     let color = d3.scaleCategory10();
     let index = 0;
     return () => color(index++);
 })()
 
-export let attrs = {
+let shapeAttrs = {
 
     rect: 'x y width height fill',
     circle: 'cx cy r fill',
@@ -20,7 +27,7 @@ export let attrs = {
     post: 'transform',
     pre: 'name id class'
 
-}; Object.keys(attrs).forEach(d => {attrs[d] = attrs[d].split(" ")});
+}; Object.keys(shapeAttrs).forEach(d => {shapeAttrs[d] = shapeAttrs[d].split(" ")});
 
 let presets = {
     x:0,
@@ -44,7 +51,28 @@ let presets = {
     transform:'translate(0 0)'
 }
 
-export function presetLookup(d, shape) {
+function defaults(shape) {
+
+    if(shapeAttrs[shape]) {
+        return shapeAttrs[shape].map(d => ({
+            name: d,
+            value: preset(d, shape)
+        }))
+    }
+
+    else {
+        return [];
+    }
+
+}
+
+function list(shape) {
+
+    return [...shapeAttrs.pre, ...shapeAttrs[shape], ...shapeAttrs.post];
+
+}
+
+function preset(d, shape) {
 
     if (shape == 'polyline' && d == 'fill') {
         return 'none';
@@ -57,23 +85,17 @@ export function presetLookup(d, shape) {
     }
 }
 
-export function attrDefaults(shape) {
+function customInput(d, i, a) {
 
-    if(attrs[shape]) {
-        return attrs[shape].map(d => ({
-            name: d,
-            value: presetLookup(d, shape)
-        }))
+    if (d.name == 'fill' || d.name == 'stroke') {
+
+        let self = this;
+
+        d3.select('.colorPicker')
+            .on('change', function() {
+                self.value = d.value = this.value;
+                update();
+            })
+            .node().click()
     }
-
-    else {
-        return [];
-    }
-
-}
-
-export function attrList(shape) {
-
-    return [...attrs.pre, ...attrs[shape], ...attrs.post];
-
 }

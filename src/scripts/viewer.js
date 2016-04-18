@@ -109,25 +109,25 @@ function drag(d) {
             }
 
 
-
             bbox.x += delta.x;
             bbox.y += delta.y;
-            
-            self
-                .attr(attrs.x, bbox.x)
-                .attr(attrs.y, bbox.y)
 
-            d.attr.find(d => d.name == attrs.x).value = bbox.x;
-            d.attr.find(d => d.name == attrs.y).value = bbox.y;
 
             if(attrs.circle) {
-
                 self
                     .attr(attrs.x, bbox.x + bbox.width/2)
                     .attr(attrs.y, bbox.y + bbox.height/2)
 
                 d.attr.find(d => d.name == attrs.x).value = bbox.x + bbox.width/2;
                 d.attr.find(d => d.name == attrs.y).value = bbox.y + bbox.height/2;
+            }
+            else {
+                self
+                    .attr(attrs.x, bbox.x)
+                    .attr(attrs.y, bbox.y)
+
+                d.attr.find(d => d.name == attrs.x).value = bbox.x;
+                d.attr.find(d => d.name == attrs.y).value = bbox.y;
             }
 
 
