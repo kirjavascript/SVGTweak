@@ -6,28 +6,6 @@ import { generateCode, parseXML } from './io';
 import draw, { initView } from './viewer';
 import { attrList, attrDefaults, presetLookup} from './data';
 
-// TODO
-
-// menu
-// XML parser XMLSerializer / https://developer.mozilla.org/en-US/docs/Web/API/DOMParser // load from file inputbox placeholder (paste svg)
-// innerHTML
-
-// https://www.npmjs.com/package/xml-parser
-// http://bl.ocks.org/mbostock/3892928
-// http://bl.ocks.org/mccannf/1629464
-// drag + resize stuff
-
-// made defaults dropdown auto input?
-
-// use i3 for showing d3 window?
-// round paths to int
-// dupe
-// svg .children
-// move up down
-// shapes / filters / etc
-
-
-
 // init
 
 i3();
@@ -68,7 +46,7 @@ function addShape() {
 //         console.log(parseXML(this.value))
 //         this.value = "";
 //     }
-    
+
 //     d3.select('#loadXMLInput')
 //         .style('display', d3.event.type == 'paste' ? 'none' : 'block')
 //     d3.select('#loadXML')
@@ -81,7 +59,7 @@ function option(element, index, action) {
     if (action == 'remove') {
 
         svg = svg.filter(d => d.index != index)
- 
+
     }
     else if (action == 'attr') {
 
