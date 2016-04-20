@@ -4,6 +4,7 @@ import * as d3 from './d3';
 import attr from './attr';
 import drawViewer from './viewer';
 import { generateCode } from './parser';
+import cJSON from 'circular-json';
 
 export let SVG = (function() {
 
@@ -14,6 +15,20 @@ export let SVG = (function() {
     }
 
     SVG.data = [];
+
+    {
+        // load saved data
+        var state = cJSON.parse(localStorage.getItem("state"));
+        state && (SVG.data = state);
+
+        // set upload event
+        window.addEventListener('beforeunload', d => {
+            localStorage.setItem("state", cJSON.stringify(SVG.data));
+        })
+        window.addEventListener('load', d => {
+            update({all:1});
+        })
+    }
 
     SVG.add = function(shape, attrs) {
         index++;
@@ -39,7 +54,7 @@ export let SVG = (function() {
 
 })()
 
-window.foo = SVG.data
+
 
 // events
 
@@ -139,18 +154,6 @@ export function update({ all, viewer, code, menu }) {
     }
 
 }
-
-// export function update() {
-
-//     menu(SVG.data)
-
-//     updateData(SVG.data);
-// }
-
-// function updateData(data) {
-//     draw(data);
-//     generateCode(data);
-// }
 
 // menu
 

@@ -71,7 +71,7 @@ function setAttrs(d) {
 
 function drag(d) {
     let self = d3.select(this);
-    
+
     let mouse, bbox, attrs;
 
     let moveTimer = 0;
@@ -82,6 +82,12 @@ function drag(d) {
     function dragStart() {
         d3.select(document.body)
             .on('mousemove', dragMove)
+
+        moveTimer = setInterval(d =>
+            requestAnimationFrame(d =>
+                update({code:1,menu:1}
+            )
+        ), 100);
 
         mouse = {
             x: d3.event.clientX,
@@ -95,7 +101,7 @@ function drag(d) {
         }
         else if (this.attributes.cx && this.attributes.cy) {
             attrs = { x: 'cx', y: 'cy', circle: 1};
-        }        
+        }
 
         d3.event.preventDefault()
     }
@@ -135,16 +141,12 @@ function drag(d) {
                 x: d3.event.clientX,
                 y: d3.event.clientY,
             }
-
-            if(!moveTimer) {
-                setTimeout(d => {moveTimer=0;update({code:1,menu:1})}, 100)
-                moveTimer = 1;
-            }
         }
 
     }
 
     function dragEnd() {
+        clearInterval(moveTimer);
         d3.select(document.body).on('mousemove', null)
         attrs = null;
         update({all:1});
