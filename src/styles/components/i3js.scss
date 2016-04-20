@@ -7,10 +7,12 @@
         float: left;
         height: 100%;
         position: relative;
+        overflow: hidden;
     }
 }
 
 .panel > .panelH {
     float: left;
     position: relative;
+    overflow: hidden;
 }

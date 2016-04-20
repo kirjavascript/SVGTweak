@@ -6,12 +6,15 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-size: 14px;
     font-family: "Lucida Console", Monaco, monospace;
 }
 
 h1 {
     margin: 0;
     text-transform: uppercase;
+    width: 100%;
+    text-align: right;
 }
 
 hr {
@@ -41,12 +44,4 @@ input {
     margin: 0;
     outline: none;
     border: 0px solid white;
-}
-
-#loadXMLInput {
-    display: none;
-}
-
-[data-tweaker] {
-    cursor:pointer;
 }

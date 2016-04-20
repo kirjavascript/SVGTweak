@@ -12,13 +12,13 @@ parse code
 TODO
 ----
 
-fix bug where number turns into string
-
-parser (use stringify from viewer for generated code?)
-
-viewBox axes in grey - w/h in black
+viewBox
 
 NESTING / HTML !!!
+
+scroll zoom
+
+make panels drag resizable
 
 grab info from docs
 
@@ -29,8 +29,6 @@ split UI stuff from index.js, some refactor (strip XML)
 http://bl.ocks.org/mbostock/3892928
 http://bl.ocks.org/mccannf/1629464
 drag + resize stuff
-
-view / viewbox
 
 Round Paths to Int
 

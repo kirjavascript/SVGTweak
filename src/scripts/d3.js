@@ -47,12 +47,12 @@
 //   randomExponential
 // } from "d3-random";
 
-// export {
+export {
 //   easeLinear,
 //   easeQuad,
 //   easeQuadIn,
 //   easeQuadOut,
-//   easeQuadInOut,
+  easeQuadInOut,
 //   easeCubic,
 //   easeCubicIn,
 //   easeCubicOut,
@@ -85,7 +85,7 @@
 //   easeElasticIn,
 //   easeElasticOut,
 //   easeElasticInOut
-// } from "d3-ease";
+} from "d3-ease";
 
 // export {
 //   polygonArea,
@@ -162,8 +162,8 @@
 //   cubehelix
 // } from "d3-color";
 
-// export {
-//   interpolate,
+export {
+  interpolate,
 //   interpolateArray,
 //   interpolateNumber,
 //   interpolateObject,
@@ -180,7 +180,7 @@
 //   interpolateHclLong,
 //   interpolateCubehelix,
 //   interpolateCubehelixLong
-// } from "d3-interpolate";
+} from "d3-interpolate";
 
 // export {
 //   dispatch
@@ -360,7 +360,7 @@ export {
   // scaleThreshold,
   // scaleTime,
   // scaleUtc,
-  // scaleCategory10,
+  scaleCategory10,
   // scaleCategory20b,
   // scaleCategory20c,
   // scaleCategory20,
@@ -392,10 +392,10 @@ export {
   properties
 } from "d3-selection-multi";
 
-// export {
-//   active,
-//   transition
-// } from "d3-transition";
+export {
+  active,
+  transition
+} from "d3-transition";
 
 export {
   axisTop,

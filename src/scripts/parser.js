@@ -55,6 +55,10 @@ export function generateCode (data, mode='xml') {
 
 export function parse(data) {
 
+    if (d3.select('#mode').node().value != 'xml') {
+        return 0;
+    }
+
     SVG.reset();
 
     let tree = htmlParse.parse(data);

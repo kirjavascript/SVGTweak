@@ -11,9 +11,36 @@
     <body>
         <div class="window">
 
-            <div class="panelH">
+            <div class="panelH menuPanel">
 
                 <h1>SVGTweak</h1>
+
+                <div class="panel">
+                    <div class="panelH">
+                        <input id="width" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">width</span>
+                    </div>
+                    <div class="panelH">
+                        <input id="height" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">height</span>
+                    </div>
+                    <div class="panelH">
+                        <input id="vboxX" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">vboxX</span>
+                    </div>
+                    <div class="panelH">
+                        <input id="vboxY" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">vboxY</span>
+                    </div>
+                     <div class="panelH">
+                        <input id="vboxW" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">vboxW</span>
+                    </div>
+                    <div class="panelH">
+                        <input id="vboxH" class="BBoxSize" type="text"/>
+                        <span class="inputLabel">vboxH</span>
+                    </div>
+                </div>
 
                 <div class="panel">
                     <div class="panelH">
@@ -35,31 +62,31 @@
                             <option value="d3">d3 mode</option>
                         </select>
                     </div>
-                    <div class="panelH">Hide Code</div>
-                    <div class="panelH">Hide Menu</div>
+                    <div class="panelH"><button id="intense">intensify</button></div>
                 </div>
 
-                <hr/>
+                <hr />
 
                 <div id="menu"></div>
 
             </div>
 
-            <div class="panelH">
+            <div class="panelH rightPanel">
 
                 <div class="window">
 
                     <div class="panelV">
+                        <button id="calmdown">X</button>
                         <svg id="viewer"></svg>
                     </div>
-
-                    <div class="panelV" id="editor"></div>
 
                 </div>
 
             </div>
 
         </div>
+        
+        <div id="editor"></div>
 
         <input type="color" class="colorPicker" />
         

@@ -6,7 +6,7 @@ import drawViewer from './viewer';
 import { generateCode } from './parser';
 import cJSON from 'circular-json';
 
-export let SVG = (function() {
+export var SVG = (function() {
 
     let index = 0;
 
@@ -16,21 +16,30 @@ export let SVG = (function() {
 
     SVG.data = [];
 
-    {
-        // load saved data
-        var state = cJSON.parse(localStorage.getItem("state"));
-        state && (SVG.data = state);
-
-        // set upload event
-        window.addEventListener('beforeunload', d => {
-            localStorage.setItem("state", cJSON.stringify(SVG.data));
-        })
-        window.addEventListener('load', d => {
-            update({all:1});
-        })
+    SVG.config = {
+        size: {
+            width: 500, height: 500, vboxX: 0, vboxY: 0, vboxW: 500, vboxH: 500
+        }
     }
 
+    // load saved data
+    var state = cJSON.parse(localStorage.getItem("state"));
+    state.data && (SVG.data = state.data);
+    state.config && (SVG.config = state.config);
+
+    // set upload event
+    window.addEventListener('beforeunload', d => {
+        localStorage.setItem("state", cJSON.stringify({
+            data:SVG.data,
+            config:SVG.config
+        }));
+    })
+    window.addEventListener('load', d => {
+        update({all:1});
+    })
+
     SVG.add = function(shape, attrs) {
+
         index++;
 
         let element = {
@@ -43,22 +52,39 @@ export let SVG = (function() {
 
         this.data.push(element)
         return this;
+
+    }
+
+    SVG.getBBox = function() {
+
+        let bbox = [];
+
+        Object
+            .keys(SVG.config.size)
+            .forEach(d => bbox.push(SVG.config.size[d]));
+
+        return bbox;
     }
 
     SVG.reset = function() {
+
         this.data = [];
         return this;
+
     }
 
     return SVG;
 
 })()
 
+// debug
 
+window.d3 = d3;
+window.SVG = SVG;
 
 // events
 
-d3.select('#mode').on('change', update)
+d3.select('#mode').on('change', d => update({code:1}))
 
 d3.select('#shape').on('change', function() {
     let shape = d3.select('#shape').node();
@@ -69,6 +95,16 @@ d3.select('#shape').on('change', function() {
 
     update({all:1});
 })
+
+// viewBox
+
+d3.selectAll('.BBoxSize')
+    .on('keydown keyup change', function() {
+        let self = d3.select(this);
+        SVG.config.size[this.id] = self.property('value');
+
+        update({code:1,viewer:1});
+    })
 
 // data manipulation
 
@@ -159,6 +195,14 @@ export function update({ all, viewer, code, menu }) {
 
 function drawMenu(data) {
 
+    // sizes
+
+    d3.selectAll('.size')
+        .data(SVG.getBBox())
+        .property('value', d => d)
+
+    // elements
+
     let shape = d3.select('#menu')
         .selectAll('div')
         .data(data, d => d.index)
@@ -213,17 +257,13 @@ function drawMenu(data) {
             .attr('class', 'attr')
             .attr('placeholder', 'attr')
             .attr('value', d => d.name)
-            .on('keydown', function(d) { setAttr("name", d, this, false)})
-            .on('keyup', function(d) { setAttr("name", d, this, false)})
-            .on('change', function(d) { setAttr("name", d, this, false)})
+            .on('keydown keyup change', function(d) { setAttr("name", d, this, false)})
 
         attrEnter.append('input')
             .attr('class', 'value')
             .attr('placeholder', 'value')
             .attr('value', d => d.value)
-            .on('keydown', function(d) { setAttr("value", d, this, false)})
-            .on('keyup', function(d) { setAttr("value", d, this, false)})
-            .on('change', function(d) { setAttr("value", d, this, false)})
+            .on('keydown keyup change', function(d) { setAttr("value", d, this, false)})
             .on('click', attr.customInput)
 
         attrEnter

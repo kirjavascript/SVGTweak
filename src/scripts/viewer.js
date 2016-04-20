@@ -7,26 +7,32 @@ var viewer = d3.select('#viewer')
     .append('g')
     .attr("transform", `translate(${padding} ${padding})`);
 
-var scale = d3.scaleLinear()
-        .range([0, 1000])
-        .domain([0, 1000])
+var scaleX = d3.scaleLinear();
 
-let xAxis = d3.axisTop(scale).ticks(20);
-let yAxis = d3.axisLeft(scale).ticks(20);
+var scaleY = d3.scaleLinear();
 
-viewer
+let xAxis = d3.axisTop(scaleX).ticks(10);
+let yAxis = d3.axisLeft(scaleY).ticks(10);
+
+let topAxis = viewer
     .append("g")
-    .attr("class", "axis xAxis")
+    .attr("class", "axis")
     .call(xAxis);
 
-viewer
+let leftAxis = viewer
     .append("g")
-    .attr("class", "axis yAxis")
+    .attr("class", "axis")
     .call(yAxis);
 
 viewer = viewer.append('g').attr('id', 'graphics')
 
 export default function(data) {
+
+    axis();
+
+    // append rect stroke viewbox
+
+    // data
 
     let draw = viewer.selectAll('[data-tweaker]')
         .data(data, d => d.index)
@@ -67,6 +73,26 @@ function setAttrs(d) {
 
     return attrs;
 
+}
+
+function axis() {
+    // axis
+
+    console.log(SVG.config.size.width)
+
+    scaleX
+        .range([0, SVG.config.size.width])
+        .domain([0, SVG.config.size.width])
+
+    scaleY
+        .range([0, SVG.config.size.height])
+        .domain([0, SVG.config.size.height])
+
+    xAxis.ticks(SVG.config.size.width/50);
+    yAxis.ticks(SVG.config.size.height/50);
+
+    topAxis.call(xAxis);
+    leftAxis.call(yAxis);
 }
 
 function drag(d) {
