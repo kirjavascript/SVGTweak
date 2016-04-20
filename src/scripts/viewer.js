@@ -1,5 +1,5 @@
 import * as d3 from './d3';
-import { update } from './index';
+import { SVG, update } from './index';
 
 var padding = 35;
 
@@ -45,6 +45,8 @@ export default function(data) {
 
 }
 
+// move into attr.js?
+
 function setAttrs(d) {
 
     let attrs = {};
@@ -71,6 +73,8 @@ function drag(d) {
     let self = d3.select(this);
     
     let mouse, bbox, attrs;
+
+    let moveTimer = 0;
 
     self.on('mousedown', dragStart)
         .on('mouseup', dragEnd)
@@ -127,10 +131,14 @@ function drag(d) {
             }
 
 
-
             mouse = {
                 x: d3.event.clientX,
                 y: d3.event.clientY,
+            }
+
+            if(!moveTimer) {
+                setTimeout(d => {moveTimer=0;update({code:1,menu:1})}, 100)
+                moveTimer = 1;
             }
         }
 
@@ -139,6 +147,6 @@ function drag(d) {
     function dragEnd() {
         d3.select(document.body).on('mousemove', null)
         attrs = null;
-        update();
+        update({all:1});
     }
 }

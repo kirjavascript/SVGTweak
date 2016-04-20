@@ -2,10 +2,8 @@ import './i3';
 import './editor';
 import * as d3 from './d3';
 import attr from './attr';
-import draw from './viewer';
+import drawViewer from './viewer';
 import { generateCode } from './parser';
-
-// split this into module?
 
 export let SVG = (function() {
 
@@ -17,18 +15,22 @@ export let SVG = (function() {
 
     SVG.data = [];
 
-    SVG.add = function(shape) {
+    SVG.add = function(shape, attrs) {
         index++;
-        this.data.push({
+
+        let element = {
             index: index++,
             shape: shape,
-            attrs: attr.defaults(shape)
-        })
+            attrs: attrs || attr.defaults(shape)
+        };
+
+        element.attrs.map(d => {d.parent = element; return d})
+
+        this.data.push(element)
         return this;
     }
 
     SVG.reset = function() {
-        index = 0;
         this.data = [];
         return this;
     }
@@ -36,6 +38,8 @@ export let SVG = (function() {
     return SVG;
 
 })()
+
+window.foo = SVG.data
 
 // events
 
@@ -48,7 +52,7 @@ d3.select('#shape').on('change', function() {
 
     shape.selectedIndex = 0;
 
-    update();
+    update({all:1});
 })
 
 // data manipulation
@@ -64,7 +68,7 @@ function option(element, index, action) {
 
         let element = SVG.data.find(d => d.index == index);
 
-        element.attrs.push({value:""});
+        element.attrs.push({value:"", parent:element});
 
     }
     else if (action == 'down') {
@@ -75,7 +79,7 @@ function option(element, index, action) {
 
     }
 
-    update();
+    update({all:1});
 }
 
 function setAttr(type, data, value, refresh) {
@@ -99,10 +103,10 @@ function setAttr(type, data, value, refresh) {
     }
 
     if (refresh) {
-        update();
+        update({all:1});
     }
     else {
-        updateData(SVG.data);
+        update({viewer:1,code:1});
     }
 }
 
@@ -116,17 +120,45 @@ function removeAttr(data) {
 
     attr.splice(attrIndex, 1)
 
-    update();
+    update({all:1});
 
 }
 
-// data bind
+// update
 
-export function update() {
+export function update({ all, viewer, code, menu }) {
+
+    if (all || menu) {
+        drawMenu(SVG.data)
+    }
+    if (all || viewer) {
+        drawViewer(SVG.data);
+    }
+    if (all || code) {
+        generateCode(SVG.data);
+    }
+
+}
+
+// export function update() {
+
+//     menu(SVG.data)
+
+//     updateData(SVG.data);
+// }
+
+// function updateData(data) {
+//     draw(data);
+//     generateCode(data);
+// }
+
+// menu
+
+function drawMenu(data) {
 
     let shape = d3.select('#menu')
         .selectAll('div')
-        .data(SVG.data, d => d.index)
+        .data(data, d => d.index)
 
     // exit
 
@@ -143,7 +175,7 @@ export function update() {
         .append('div')
         .classed('element', 1)
         .html(d => d.shape)
-        .on('click', d => window.open('http://mdn.io/SVG.data%20element%20' + d.shape))
+        .on('click', d => window.open('http://mdn.io/SVG%20element%20' + d.shape))
 
     shapeEnter
         .selectAll('button')
@@ -169,7 +201,7 @@ export function update() {
 
         let attrEnter = shapeMerge
             .selectAll('.attr')
-            .data(d => d.attrs.map(j => {j.parent = d; return j}))
+            .data(d => d.attrs)
             .enter()
             .append('div')
             .classed('line', 1)
@@ -210,12 +242,6 @@ export function update() {
             .attr('class', 'option')
             .html('remove')
             .on('click', d => removeAttr(d))
-
-        updateData(SVG.data);
     }
 }
 
-function updateData(data) {
-    draw(data);
-    generateCode(data, d3.select('#mode').node().value);
-}

@@ -103,7 +103,7 @@ function customInput(d, i, a) {
         d3.select('.colorPicker')
             .on('change', function() {
                 self.value = d.value = this.value;
-                update();
+                update({all:1});
             })
             .node()
             .click()

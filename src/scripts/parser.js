@@ -1,7 +1,11 @@
+import * as d3 from './d3';
+import { SVG, update } from './index';
 import { read, write } from './editor';
 import htmlParse from 'html-parse-stringify';
 
 export function generateCode (data, mode='xml') {
+
+    mode = d3.select('#mode').node().value;
 
     if (mode == 'xml') {
 
@@ -51,20 +55,49 @@ export function generateCode (data, mode='xml') {
 
 export function parse(data) {
 
-    // use object differ
+    SVG.reset();
 
-    let ast = htmlParse.parse(data);
+    let tree = htmlParse.parse(data);
 
-    if(ast.name.toLowerCase() == 'svg') {
+    tree
+        .filter(d => d.name.toLowerCase() == "svg")
+        .forEach(d => {
 
-        ast.children.forEach(d => {
+            // get viewbox / width / height
 
-        })
+            d.children.filter(d => d.type != 'text').forEach(d => {
 
-    }
+                SVG.add(d.name, getAttrs(d.attrs));
 
-    function getAttrs() {
+            })
 
+        });
+
+    update({viewer:1,menu:1})
+
+    // move into attr.js?
+
+    function getAttrs(d) {
+
+        if (d) {
+
+            let attrs = [];
+
+            Object.keys(d).forEach(i => {
+                attrs.push({
+                    name: i,
+                    value: d[i]
+                })
+            });
+
+            return attrs;
+
+        }
+        else {
+
+            return [];
+
+        }
     }
 
 }
