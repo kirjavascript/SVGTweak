@@ -82,26 +82,7 @@ export function parse(data) {
     // move into attr.js?
 
     function getAttrs(d) {
-
-        if (d) {
-
-            let attrs = [];
-
-            Object.keys(d).forEach(i => {
-                attrs.push({
-                    name: i,
-                    value: d[i]
-                })
-            });
-
-            return attrs;
-
-        }
-        else {
-
-            return [];
-
-        }
+        return Object.keys(d).map(i => ({name: i, value: d[i]}));
     }
 
 }

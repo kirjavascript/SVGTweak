@@ -12,9 +12,12 @@ parse code
 TODO
 ----
 
-viewBox
-
 NESTING / HTML !!!
+dropdown -> svg/g
+
+code output -> parse from dom?
+
+X,Y follow mouse
 
 scroll zoom
 

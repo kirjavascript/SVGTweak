@@ -17,9 +17,12 @@ export var SVG = (function() {
     SVG.data = [];
 
     SVG.config = {
-        size: {
-            width: 500, height: 500, vboxX: 0, vboxY: 0, vboxW: 500, vboxH: 500
-        }
+        width: 500,
+        height: 500,
+        vboxX: 0,
+        vboxY: 0,
+        vboxW: 500,
+        vboxH: 500
     }
 
     // load saved data
@@ -55,16 +58,13 @@ export var SVG = (function() {
 
     }
 
-    SVG.getBBox = function() {
+    SVG.getVBox = () => 
 
-        let bbox = [];
+        Object.keys(SVG.config).slice(2,6).map(d => SVG.config[d]).join(" ");
 
-        Object
-            .keys(SVG.config.size)
-            .forEach(d => bbox.push(SVG.config.size[d]));
+    SVG.getBBox = () => 
 
-        return bbox;
-    }
+        Object.keys(SVG.config).slice(0,6).map(d => SVG.config[d]);
 
     SVG.reset = function() {
 
@@ -101,7 +101,7 @@ d3.select('#shape').on('change', function() {
 d3.selectAll('.BBoxSize')
     .on('keydown keyup change', function() {
         let self = d3.select(this);
-        SVG.config.size[this.id] = self.property('value');
+        SVG.config[this.id] = self.property('value');
 
         update({code:1,viewer:1});
     })

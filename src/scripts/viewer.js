@@ -24,9 +24,14 @@ let leftAxis = viewer
     .attr("class", "axis")
     .call(yAxis);
 
-viewer = viewer.append('g').attr('id', 'graphics')
+viewer = viewer.append('svg').attr('id', 'graphics')
 
 export default function(data) {
+
+    viewer
+        .attr('width', SVG.config.width)
+        .attr('height', SVG.config.height)
+        .attr('viewBox', SVG.getVBox())
 
     axis();
 
@@ -78,18 +83,16 @@ function setAttrs(d) {
 function axis() {
     // axis
 
-    console.log(SVG.config.size.width)
-
     scaleX
-        .range([0, SVG.config.size.width])
-        .domain([0, SVG.config.size.width])
+        .range([0, SVG.config.width])
+        .domain([0, SVG.config.width])
 
     scaleY
-        .range([0, SVG.config.size.height])
-        .domain([0, SVG.config.size.height])
+        .range([0, SVG.config.height])
+        .domain([0, SVG.config.height])
 
-    xAxis.ticks(SVG.config.size.width/50);
-    yAxis.ticks(SVG.config.size.height/50);
+    xAxis.ticks(SVG.config.width/50);
+    yAxis.ticks(SVG.config.height/50);
 
     topAxis.call(xAxis);
     leftAxis.call(yAxis);

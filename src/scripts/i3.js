@@ -41,13 +41,6 @@ function toggle() {
             return t => `${i(t)}%`
         })
 
-    // d3.select('.editorPanel')
-    //     .transition(t)
-    //     .styleTween('width', d => {
-    //         let i = d3.interpolate(intense ? 100 : 0, intense ? 0 : 100);
-    //         return t => `${i(t)}%`
-    //     })
-
     d3.select('#calmdown')
         .transition(t)
         .style('opacity', intense ? 1 : 0)
