@@ -22,7 +22,7 @@ make panels drag resizable
 
 grab info from docs
 
-swapping index should just change itemz
+swapping index should just change itemz (selection.sort().order().raise())
 
 split UI stuff from index.js, some refactor (strip XML)
 
